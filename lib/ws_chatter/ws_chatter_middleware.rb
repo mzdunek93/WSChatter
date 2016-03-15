@@ -11,7 +11,6 @@ module WsChatter
       @clients = []
       @scope = WsChatter.config.scope
       @status_column = WsChatter.config.status_column
-      @messages_model = WsChatter.config.messages_model.constantize
       @users_model = @scope.to_s.camelize.constantize
     end
 
@@ -89,7 +88,7 @@ module WsChatter
 
       def send_message(data, user)
         data["user_id"] = data["user_id"].to_i
-        msg = @messages_model.create(sender: user, recipient_id: data["user_id"], body: data["message"])
+        msg = Message.create(sender: user, recipient_id: data["user_id"], body: data["message"])
         send_to(data["user_id"], type: "message", user_id: user.id, message: data["message"], time: msg.created_at)
       end
 
